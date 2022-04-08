@@ -34,7 +34,10 @@
     "lint": "tsdx lint",
     "prepare": "tsdx build",
     "size": "size-limit",
-    "analyze": "size-limit --why"
+    "analyze": "size-limit --why",
+    "examples:base": "yarn --cwd examples/base",
+    "examples:reqres": "yarn --cwd examples/reqres",
+    "examples:refresh-token": "yarn --cwd examples/refresh-token"
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "^7.0.8",
