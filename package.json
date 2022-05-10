@@ -18,6 +18,8 @@
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "module": "dist/react-auth.esm.js",
+  "react-native": "src/index.tsx",
+  "source": "src/index.tsx",
   "files": [
     "dist",
     "src"

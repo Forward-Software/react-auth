@@ -1,5 +1,9 @@
 # React Auth
 
+<div align="center">
+    <img src="./assets/cover.jpeg" width="100%" />
+</div>
+
 > Simplify your Auth flow when working with React apps
 
 [![license](https://img.shields.io/github/license/Forward-Software/react-auth.svg)](https://github.com/Forward-Software/react-auth/blob/main/LICENSE) [![CI](https://github.com/Forward-Software/react-auth/actions/workflows/main.yml/badge.svg)](https://github.com/Forward-Software/react-auth/actions/workflows/main.yml) [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/Forward-Software/react-auth.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Forward-Software/react-auth/context:javascript) [![Coverage Status](https://coveralls.io/repos/github/Forward-Software/react-auth/badge.svg?branch=main)](https://coveralls.io/github/Forward-Software/react-auth?branch=main) [![Github Issues](https://img.shields.io/github/issues/Forward-Software/react-auth.svg)](https://github.com/Forward-Software/react-auth/issues)
