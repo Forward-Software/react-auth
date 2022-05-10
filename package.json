@@ -39,7 +39,8 @@
     "analyze": "size-limit --why",
     "examples:base": "yarn --cwd examples/base",
     "examples:reqres": "yarn --cwd examples/reqres",
-    "examples:refresh-token": "yarn --cwd examples/refresh-token"
+    "examples:refresh-token": "yarn --cwd examples/refresh-token",
+    "examples:native": "yarn --cwd examples/native"
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "^7.0.8",
