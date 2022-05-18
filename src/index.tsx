@@ -7,6 +7,8 @@ import { BaseAuthClient } from './types';
  * Props that can be passed to AuthProvider
  */
 export type AuthProviderProps = {
+  children?: React.ReactNode;
+
   /**
    * An optional component to display if AuthClient initialization failed.
    */
