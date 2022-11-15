@@ -1,5 +1,7 @@
 name: CI
+
 on: [push]
+
 jobs:
   build:
     name: Build, lint, and test on Node ${{ matrix.node }} and ${{ matrix.os }}
@@ -11,11 +13,11 @@ jobs:
         os: [ubuntu-latest, windows-latest, macOS-latest]
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v2
+      - name: Clone repository
+        uses: actions/checkout@v3
 
-      - name: Use Node ${{ matrix.node }}
-        uses: actions/setup-node@v1
+      - name: Set Node.js version to ${{ matrix.node }}
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
 
