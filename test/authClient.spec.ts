@@ -126,6 +126,48 @@ describe('AuthClient', () => {
 
       expect(refreshFailureEventListener).toHaveBeenCalledTimes(1);
     });
+
+    it('should NOT trigger onRefresh twice', async () => {
+      const authClientStub = createMockAuthClient();
+      jest.spyOn(authClientStub, 'onRefresh').mockResolvedValue({
+        authToken: 'tkn',
+        refreshToken: 'tkn',
+      });
+
+      await rtl.act(() => {
+        authClientStub.refresh();
+
+        authClientStub.refresh();
+      });
+
+      expect(authClientStub.onRefresh).toHaveBeenCalledTimes(1);
+    });
+
+    it('should NOT emit refresh events twice', async () => {
+      const refreshStartedListener = jest.fn();
+      const refreshSuccessEventListener = jest.fn();
+      const refreshFailureEventListener = jest.fn();
+
+      const authClientStub = createMockAuthClient();
+      jest.spyOn(authClientStub, 'onRefresh').mockResolvedValue({
+        authToken: 'tkn',
+        refreshToken: 'tkn',
+      });
+
+      authClientStub.on('refreshSuccess', refreshSuccessEventListener);
+      authClientStub.on('refreshStarted', refreshStartedListener);
+      authClientStub.on('refreshFailed', refreshFailureEventListener);
+
+      await rtl.act(() => {
+        authClientStub.refresh();
+
+        authClientStub.refresh();
+      });
+
+      expect(refreshStartedListener).toHaveBeenCalledTimes(1);
+      expect(refreshSuccessEventListener).toHaveBeenCalledTimes(1);
+      expect(refreshFailureEventListener).toHaveBeenCalledTimes(0);
+    });
   });
 
   describe('on logout', () => {
