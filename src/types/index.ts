@@ -1,3 +1,4 @@
+import { Deferred } from './deferred';
 import { createEventEmitter, EventKey, EventReceiver } from './eventEmitter';
 
 type AuthTokens = {};
@@ -50,6 +51,9 @@ export abstract class BaseAuthClient<
     isInitialized: false,
     tokens: {},
   };
+
+  // refresh queue - used to avoid concurrency issue during Token refresh
+  private refreshQ: Array<Deferred<boolean>> = [];
 
   private eventEmitter = createEventEmitter<AuthEventsMap<E>>();
 
@@ -132,37 +136,11 @@ export abstract class BaseAuthClient<
   }
 
   public async refresh(minValidity?: number): Promise<boolean> {
-    this.emit('refreshStarted', undefined);
+    const deferred = new Deferred<boolean>();
 
-    await this.onPreRefresh?.();
+    this.runRefresh(deferred, minValidity);
 
-    let isSuccess: boolean = false;
-
-    try {
-      const tokens = await this.onRefresh(minValidity);
-
-      this.setState({
-        isAuthenticated: true,
-        tokens,
-      });
-
-      this.emit('refreshSuccess', undefined);
-
-      isSuccess = true;
-    } catch (err) {
-      this.setState({
-        isAuthenticated: false,
-        tokens: {},
-      });
-
-      this.emit('refreshFailed', err as E);
-
-      isSuccess = false;
-    }
-
-    await this.onPostRefresh?.(isSuccess);
-
-    return this.isAuthenticated;
+    return deferred.getPromise();
   }
 
   public async logout(): Promise<void> {
@@ -234,6 +212,48 @@ export abstract class BaseAuthClient<
   //
   // Private methods
   //
+
+  private async runRefresh(
+    deferred: Deferred<boolean>,
+    minValidity?: number
+  ): Promise<void> {
+    // Add deferred Promise to refresh queue
+    this.refreshQ.push(deferred);
+
+    // If refresh queue already has promises enqueued do not attempt a new refresh - one is already in progress
+    if (this.refreshQ.length !== 1) {
+      return;
+    }
+
+    this.emit('refreshStarted', undefined);
+
+    await this.onPreRefresh?.();
+
+    let isAuthenticated: boolean = false;
+    let tokens: Partial<T> = {};
+
+    try {
+      tokens = await this.onRefresh(minValidity);
+      isAuthenticated = true;
+
+      this.emit('refreshSuccess', undefined);
+    } catch (err) {
+      isAuthenticated = false;
+
+      this.emit('refreshFailed', err as E);
+    }
+
+    this.setState({
+      isAuthenticated,
+      tokens,
+    });
+
+    await this.onPostRefresh?.(isAuthenticated);
+
+    for (let p = this.refreshQ.pop(); p != null; p = this.refreshQ.pop()) {
+      p.resolve(isAuthenticated);
+    }
+  }
 
   private emit<K extends EventKey<AuthEventsMap<E>>>(
     eventName: K,
