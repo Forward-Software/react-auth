@@ -11,7 +11,7 @@ describe('AuthClient', () => {
       const initSuccessEventListener = jest.fn();
 
       const authClientStub = createMockAuthClient();
-      jest.spyOn(authClientStub, 'onInit').mockResolvedValue();
+      jest.spyOn(authClientStub, 'onInit').mockResolvedValue(undefined);
 
       authClientStub.on('initSuccess', initSuccessEventListener);
 
@@ -146,7 +146,7 @@ describe('AuthClient', () => {
       const logoutSuccessEventListener = jest.fn();
 
       const authClientStub = createMockAuthClient();
-      jest.spyOn(authClientStub, 'onLogout').mockResolvedValue();
+      jest.spyOn(authClientStub, 'onLogout').mockResolvedValue(undefined);
 
       authClientStub.on('logoutSuccess', logoutSuccessEventListener);
 

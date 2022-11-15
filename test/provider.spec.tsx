@@ -14,7 +14,7 @@ describe('AuthProvider', () => {
       const authClientStub = createMockAuthClient();
       const authClientInitSpy = jest
         .spyOn(authClientStub, 'onInit')
-        .mockResolvedValue();
+        .mockResolvedValue(undefined);
 
       const { AuthProvider } = createAuth(authClientStub);
 

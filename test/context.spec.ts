@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 import { createMockAuthClient } from './test-utils';
 
@@ -17,14 +17,17 @@ describe('createAuth', () => {
 
   describe('useAuthClient hook', () => {
     it('should throw error if used outside AuthProvider context', async () => {
+      const consoleErrorFn = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => jest.fn());
+
       const { useAuthClient } = createAuth(createMockAuthClient());
 
-      const { result } = renderHook(() => useAuthClient());
+      expect(() => {
+        renderHook(() => useAuthClient());
+      }).toThrow('useAuthClient hook should be used inside AuthProvider');
 
-      expect(result.error).toBeDefined();
-      expect(result.error?.message).toBe(
-        'useAuthClient hook should be used inside AuthProvider'
-      );
+      consoleErrorFn.mockRestore();
     });
   });
 });
